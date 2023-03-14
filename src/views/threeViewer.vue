@@ -1,17 +1,23 @@
 <template>
   <div class="home">
-    <threeTest />
+    <fbx v-if='showStatus=="Fbx"' />
+    <ds v-if='showStatus=="Ds"' />
+    
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import ThreeTest from '@/components/fbx.vue'
+import Fbx from '@/components/fbx.vue'
+import Ds from '@/components/threeds.vue'
 
 export default {
   name: 'HomeView',
   components: {
-    ThreeTest
-  }
+    Fbx,Ds
+  },
+  data: () => ({
+    showStatus:'Ds'
+	}),
 }
 </script>

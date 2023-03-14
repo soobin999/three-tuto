@@ -26,9 +26,8 @@ export default {
 	methods: {
 		init() {
 			const container = this.$refs.test;
-			document.body.appendChild(container);
 			camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
-			camera.position.set(10, 10, 10);
+			camera.position.set(5, 5, 5);
 
 			scene = new THREE.Scene();
 			scene.background = new THREE.Color(0xa0a0a0);
@@ -68,10 +67,6 @@ export default {
 			loader.load('models/fbx/test2.fbx', function (object) {
 
 				mixer = new THREE.AnimationMixer(object);
-
-				//애니메이션 삭제
-				//const action = mixer.clipAction( object.animations[ 0 ] );
-				//action.play();
 
 				object.traverse(function (child) {
 
