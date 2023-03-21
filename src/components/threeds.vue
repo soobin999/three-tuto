@@ -22,53 +22,49 @@ export default {
     data: () => ({
 
 	}),
-    computed:{
-        windowWidth(){
-            return window.innerWidth
-        },
-        windowHeight(){
-            return window.innerHeight
-        },
-    },
 	methods: {
 		init() {
 		    let container = this.$refs.test;
 		    
-
-		    camera = new THREE.PerspectiveCamera(60, this.windowWidth / this.windowHeight, 0.1, 10);
-		    camera.position.z = 1;
+		    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 10);
+		    camera.position.z = 2;
 
 		    scene = new THREE.Scene();
 		    scene.add(new THREE.HemisphereLight());
 
-		    const directionalLight = new THREE.DirectionalLight(0xffeedd);
-		    directionalLight.position.set(0, 0, 0);
+		    const directionalLight = new THREE.DirectionalLight(0xffeedd );
+		    directionalLight.position.set(0, 0, 2);
 		    scene.add(directionalLight);
-
+			scene.background = new THREE.Color(0xffffff);
 		    //3ds files dont store normal maps
 		    const normal = new THREE.TextureLoader().load('models/3ds/portalgun/textures/normal.jpg');
 
 		    const loader = new TDSLoader();
 		    loader.setResourcePath('models/3ds/portalgun/textures/');
-		    loader.load('models/3ds/portalgun/SB_model.3ds', function (object) {
-
+		    loader.load('models/3ds/portalgun/portalgun.3ds', function (object) {
+				console.log(object)
 		        object.traverse(function (child) {
-		            if (child.isMesh) {
-                        for(let material of child.material){
-                            material.specular.setScalar(10);
-                            material.normalMap = normal;
-                        }
-		            }
+		            if ( child.isMesh ) {
+
+							child.material.specular.setScalar( 0.1 );
+							child.material.normalMap = normal;
+
+						}
+					//if (child.isMesh) {
+                    //    for(let material of child.material){
+                    //        material.specular.setScalar(0.1);
+                    //        material.normalMap = normal;
+                    //    }
+		            //}
 
 		        });
-
 		        scene.add(object);
 
 		    });
 
 		    renderer = new THREE.WebGLRenderer();
 		    renderer.setPixelRatio(window.devicePixelRatio);
-		    renderer.setSize(this.windowWidth, this.windowHeight);
+		    renderer.setSize(window.innerWidth, window.innerHeight);
 		    renderer.outputEncoding = THREE.sRGBEncoding;
 		    container.appendChild(renderer.domElement);
 
@@ -78,10 +74,10 @@ export default {
 		},
 		resize() {
 
-			camera.aspect = this.windowWidth / this.windowHeight;
+			camera.aspect = window.innerWidth / window.innerHeight;
 			camera.updateProjectionMatrix();
 
-			renderer.setSize( this.windowWidth, this.windowHeight );
+			renderer.setSize(  window.innerWidth, window.innerHeight );
 
 		},
 		animate() {
@@ -89,7 +85,7 @@ export default {
 			controls.update();
 			renderer.render( scene, camera );
 
-			requestAnimationFrame( this.animate );
+			requestAnimationFrame( () => { this.animate() } );
 
 		}
 	},
